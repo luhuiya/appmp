@@ -32,36 +32,58 @@ class UserController extends Controller
 
        return $user;
    }
-   public function changePassword(Request $request)
-   {        
-       $validator = $this->validator($request->all());
-    //    $user = $request->user();
+   public function changeProfile(Request $request)
+   {                
        $user = User::find($request->user()['id']);
 
-        if ($validator->fails()) {
-            return array(
+       if($request['name'] != ''){
+           $user->name = $request['name'];
+       }
+
+       if($request['email'] != ''){
+           if ($this->emailValidator($request->all())->fails()) {
+               return array(
+                   'code' => 201,
+                   'message' => 'Error while change profile, please try again or contact adminstrator. '
+               );
+           } else {
+               $user->email = $request['email'];
+           }
+       }
+
+       if($request['old_password'] != '' && $request['new_password'] != ''){
+           if ($this->passwordValidator($request->all())->fails()) {
+               return array(
+                   'code' => 201,
+                   'message' => 'Error while change profile, please try again or contact adminstrator. '
+               );
+           } else if (Hash::check($request['old_password'], $user->getAuthPassword())) {            
+                $user->password = bcrypt($request['new_password']);
+            } else {
+                return array(
                 'code' => 201,
-                'message' => 'Error while change password, please try again or contact adminstrator. '
-            );
-        }
-        if (Hash::check($request['old_password'], $user->getAuthPassword() )) {            
-            $user->password = bcrypt($request['new_password']);
-            $user->save();
-        } else {
-            return array(
-               'code' => 201,
-               'message' => 'Your Password did not matched.'
-            );
-        }
-    //    return $value ;
-       return $this->successResponse('Password successfully changed.');
+                'message' => 'Your Password did not matched, please try again or contact adminstrator.'
+                );
+            }
+       }
+
+       $user->save();
+
+       return $this->successResponse('Profile successfully changed.');
    }
 
-    protected function validator(array $data)
+    protected function passwordValidator(array $data)
     {
         return Validator::make($data, [
-            'old_password' => 'required|min:6',
-            'new_password' => 'required|min:6',
+            'old_password' => 'min:6',
+            'new_password' => 'min:6',
+        ]);
+    }
+    
+    protected function emailValidator(array $data)
+    {
+        return Validator::make($data, [
+            'email' => 'email|max:255|unique:users',
         ]);
     }
 }

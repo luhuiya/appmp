@@ -72,7 +72,7 @@ Route::get('test/api', 'Api\ApiTestController@index');
 
 Route::group(['middleware' => ['cors', 'auth:api'], 'prefix' => 'api'], function () {
     Route::get('getuserdetails', 'UserController@getUserDetails');
-    Route::post('change-password', 'UserController@changePassword');
+    Route::post('change-profile', 'UserController@changeProfile');
 
     Route::resource('product', 'Api\ApiProductController');
     Route::post('product/generatedownloadurl', 'Api\ApiProductDownloadController@generateDownloadUrl');
