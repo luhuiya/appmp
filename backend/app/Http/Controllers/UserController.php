@@ -11,10 +11,11 @@ use Hash;
 
 class UserController extends Controller
 {
-   public function __construct(){
+   public function __construct() {
       //$this->middleware('Second');
    }
-   public function showPath(Request $request){
+
+   public function showPath(Request $request) {
       $uri = $request->path();
       echo '<br>URI: '.$uri;
       
@@ -27,13 +28,12 @@ class UserController extends Controller
       
       echo 'Method: '.$method;
    }
-   public function getUserDetails(Request $request){
+   public function getUserDetails(Request $request) {
        $user = $request->user();
 
        return $user;
    }
-   public function changeProfile(Request $request)
-   {                
+   public function changeProfile(Request $request) {                
        $user = User::find($request->user()['id']);
 
        if($request['name'] != ''){
@@ -72,16 +72,14 @@ class UserController extends Controller
        return $this->successResponse('Profile successfully changed.');
    }
 
-    protected function passwordValidator(array $data)
-    {
+    protected function passwordValidator(array $data) {
         return Validator::make($data, [
             'old_password' => 'min:6',
             'new_password' => 'min:6',
         ]);
     }
     
-    protected function emailValidator(array $data)
-    {
+    protected function emailValidator(array $data) {
         return Validator::make($data, [
             'email' => 'email|max:255|unique:users',
         ]);

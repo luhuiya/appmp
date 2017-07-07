@@ -184,6 +184,11 @@ return [
         onestopcore\Providers\EventServiceProvider::class,
         onestopcore\Providers\RouteServiceProvider::class,
 
+        /*
+         * Custom Service Providers...
+         */
+        // Reliese\Coders\CodersServiceProvider::class,
+
     ],
 
     /*

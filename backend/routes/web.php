@@ -86,6 +86,9 @@ Route::group(['middleware' => ['cors', 'auth:api'], 'prefix' => 'api'], function
     Route::post('payment/create', 'Api\Payment\ApiPaymentController@create');
     Route::post('sumarypayment', 'Api\Payment\ApiPaymentController@createSumaryAction');
 
+    /* Review */
+    Route::get('reviews', 'ReviewController@index');
+    Route::post('review/add', 'ReviewController@store');
 });
 Route::get('donebalance', 'Api\Payment\ApiPaymentController@doneBalanceAction');
 Route::get('product/download', 'Api\ApiProductDownloadController@downloadAction');
