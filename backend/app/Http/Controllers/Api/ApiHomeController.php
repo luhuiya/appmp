@@ -29,6 +29,12 @@ class ApiHomeController extends Controller
                 $images = $product->images;
                 $positions = $product->positions;
                 $subcategory =  $product->subcategory;
+                $reviews = $product->reviews;
+                $rating = $product->rating;
+                // foreach($reviews as $review){
+                //     $rating += $review->rating;
+                // }
+                
             }
             $category->products = $products;
         }

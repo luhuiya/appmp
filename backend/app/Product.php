@@ -42,4 +42,12 @@ class Product extends Model
     {
         return $this->hasMany('onestopcore\ProductImage');
     }
+
+    /**
+     * Get the reviews.
+     */
+    public function reviews()
+    {
+        return $this->hasMany('onestopcore\Review');
+    }
 }
