@@ -29,16 +29,11 @@ class ReviewController extends Controller
      */
     public function create(array $data, $user)
     {
-        // return array(
-        //     'product_id' => $data['product_id'],
-        //     'user_id' => $user_id,
-        //     'description' => $data['description']
-        // );
-        // echo $user_id;die();
         return Review::create([
             'user_id' => $user->id,
             'product_id' => $data['product_id'],
             'description' => $data['description'],
+            'rating' => $data['rating'],
         ]);
     }
 
@@ -80,9 +75,20 @@ class ReviewController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Request $request)
     {
-        //
+        $data = $request->all();
+        $validator = $this->validator($data);
+
+        if ($validator->fails()) {
+            return array(
+                'code' => 201,
+                'message' => 'Error while add review, please try again or contact adminstrator. '
+            );
+        }
+        
+        $review = $this->update($request->all());
+        return $this->successResponse('Edit review is successful.', $review);
     }
 
     /**
@@ -92,9 +98,13 @@ class ReviewController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
-    {
-        //
+    public function update(array $data)
+    {        
+        $review = Review::find($data['id']);
+        $review->description = $data['description'];
+        $review->rating = $data['rating'];
+        $review->save();
+        return $review;
     }
 
     /**
@@ -108,10 +118,18 @@ class ReviewController extends Controller
         //
     }
 
+    public function find($id)
+    {        
+        $review = Review::with('product','user')->where('product_id', $id)->get();
+        
+        return $this->successResponse('OK', $review);
+    }
+
     protected function validator(array $data) {
         return Validator::make($data, [
             'product_id' => 'required',
             'description' => 'required',
+            'rating' => 'required',
         ]);
     }
 }
