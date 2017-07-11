@@ -1,3 +1,3 @@
 module.exports = {
-    url: 'http://appmp.dev'
+    url: 'http://localhost:8000'
 }
