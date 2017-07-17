@@ -48,7 +48,6 @@
 - create the database, named according to the `DB_DATABASE`
 - run this command on terminal `php artisan migrate`
 - run `php artisan db:seed` 
-- run `php artisan migrate` again to add foreign key relations
 - run `php artisan serve --host 0.0.0.0` then open `localhost:8000` on the browser
 - to investigate the error log, run this command `php artisan tail`
 
