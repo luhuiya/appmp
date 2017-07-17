@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "start": "webpack-dev-server --hot --inline --colors --progress"
+    "start": "webpack-dev-server --hot --inline --colors --progress --host 172.19.11.126 --content-base --port 8020"
   },
   "author": "",
   "license": "ISC",
