@@ -26,6 +26,9 @@ class ApiHomeController extends Controller
 
             $products = Product::where('category_id', $category->id)->get();
             foreach($products as $product){
+                foreach($product->images as $image){
+                    $image->image_url = url('/').'/storage/'.$image->image;
+                }                
                 $images = $product->images;
                 $positions = $product->positions;
                 $subcategory =  $product->subcategory;

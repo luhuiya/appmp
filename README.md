@@ -35,7 +35,6 @@
     ```
 - create the database
 - run this command on terminal `php artisan migrate`
-- then run `php artisan migrate:rollback --step 7` to undo adding foreign key because this will prevent us to insert seed data
 - run `php artisan db:seed` 
 - run `php artisan migrate` again to add foreign key relations
 - run `php artisan serve --host 0.0.0.0` then open `localhost:8000` on the browser

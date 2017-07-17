@@ -6,8 +6,14 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Passport\HasApiTokens;
 
-class User extends Authenticatable {
+class OauthUser extends Authenticatable {
     use HasApiTokens, Notifiable;
+    /**
+     * The table associated with the model.
+     *
+     * @var string
+     */
+    protected $table = 'oauth_user';
 
     /**
      * The attributes that are mass assignable.
@@ -15,7 +21,7 @@ class User extends Authenticatable {
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password', 'role',
+        'user_id', 'email', 'token'
     ];
 
     /**
@@ -24,11 +30,10 @@ class User extends Authenticatable {
      * @var array
      */
     protected $hidden = [
-        'password', 'remember_token',
     ];
 
-    public function balance()
+    public function user()
     {
-        return $this->belongsTo('onestopcore\Balance');
+        return $this->belongsTo('onestopcore\User');
     }
 }

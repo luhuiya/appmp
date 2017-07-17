@@ -16,11 +16,11 @@ class CreateReviewTable extends Migration {
 		Schema::create('review', function(Blueprint $table)
 		{
 			$table->integer('id', true);
-			$table->integer('user_id')->index('fki_user_id_user');
+			$table->integer('user_id')->index('fki_review_user');
 			$table->integer('product_id')->index('fki_review_product');
+			$table->integer('rating');
 			$table->string('description');
 			$table->timestamps();
-			$table->integer('rating');
 		});
 	}
 
