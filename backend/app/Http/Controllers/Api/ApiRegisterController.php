@@ -38,7 +38,7 @@ class ApiRegisterController extends Controller
        if ($validator->fails()) {
            return array(
                'code' => 201,
-               'message' => 'Error whle registering user, please try again or contact adminstrator. '
+               'message' => $validator->errors()->first()
            );
        }
 
