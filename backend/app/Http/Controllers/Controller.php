@@ -24,4 +24,18 @@ class Controller extends BaseController
 
         return $response;
     }
+    
+    public function failResponse($message, $data = null){
+        $response = array(
+            'code' => 201,
+            'error' => true,
+            'message' => $message
+        );
+        
+        if($data){
+            $response['data'] = $data;
+        }
+
+        return $response;
+    }
 }

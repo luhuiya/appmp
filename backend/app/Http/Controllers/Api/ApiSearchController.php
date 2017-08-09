@@ -25,8 +25,8 @@ class ApiSearchController extends Controller
     	/*$results = Product::where('category_id', '=', $category_id)->where('product_name', 'like', '%'.$keywords.'%')->with('images')->get();*/
 
     	$results = Product::where('category_id', '=', $category_id)->where(function($query) use ($keywords) {
-    		$query->where('product_name', 'ilike', '%'.$keywords.'%');
-    		$query->orWhere('description', 'ilike', '%'.$keywords.'%');
+    		$query->where('product_name', 'like', '%'.$keywords.'%');
+    		$query->orWhere('description', 'like', '%'.$keywords.'%');
     	})->with('images')->get();
 
     	return $results;
