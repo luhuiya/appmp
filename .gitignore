@@ -1,5 +1,4 @@
 /backend/node_modules
-/backend/public/storage
 /backend/vendor
 /.idea
 Homestead.json
