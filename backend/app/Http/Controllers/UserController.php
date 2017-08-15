@@ -46,40 +46,30 @@ class UserController extends Controller
        return $this->successResponse('OK.', ['user'=>$user, 'balance'=>$balance->balance]);
    }
    public function changeProfile(Request $request) {                
-       $user = User::find($request->user()['id']);
+       $user = $request->user();
 
-       if($request['name'] != ''){
-           $user->name = $request['name'];
-       }
+       $infoRules = [
+           'name' => 'required',
+           'email' => "required|email|max:255|unique:users,email,$user->id"
+       ];
 
-       if($request['email'] != ''){
-           if ($this->emailValidator($request->all())->fails()) {
-               return array(
-                   'code' => 201,
-                   'message' => 'Error while change profile, please try again or contact adminstrator. '
-               );
-           } else {
-               $user->email = $request['email'];
-           }
+       $validation = Validator::make($request->all(), $infoRules);
+       if ($validation->fails()) {
+           return $this->successResponse($validation->errors()->first());
        }
 
        if($request['old_password'] != '' && $request['new_password'] != ''){
-           if ($this->passwordValidator($request->all())->fails()) {
-               return array(
-                   'code' => 201,
-                   'message' => 'Error while change profile, please try again or contact adminstrator. '
-               );
-           } else if (Hash::check($request['old_password'], $user->getAuthPassword())) {            
-                $user->password = bcrypt($request['new_password']);
-            } else {
-                return array(
-                'code' => 201,
-                'message' => 'Your Password did not matched, please try again or contact adminstrator.'
-                );
-            }
+           $passwordValidation = $this->passwordValidator($request->all());
+           if ($passwordValidation->fails()) {
+               return response()->json(['code' => 200, 'error' => true, 'message' => $passwordValidation->errors()->first()], 200);
+           } else if (Hash::check($request['old_password'], $user->getAuthPassword())) {
+               $request->merge(['password' => bcrypt($request['new_password'])]);
+           } else {
+               return response()->json(['code' => 200, 'error' => true, 'message' => 'Your Password did not matched, please try again or contact adminstrator.'], 200);
+           }
        }
 
-       $user->save();
+       $user->update($request->all());
 
        return $this->successResponse('Profile successfully changed.');
    }
@@ -88,12 +78,6 @@ class UserController extends Controller
         return Validator::make($data, [
             'old_password' => 'min:6',
             'new_password' => 'min:6',
-        ]);
-    }
-    
-    protected function emailValidator(array $data) {
-        return Validator::make($data, [
-            'email' => 'email|max:255|unique:users',
         ]);
     }
 }
