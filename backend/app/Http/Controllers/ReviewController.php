@@ -48,7 +48,8 @@ class ReviewController extends Controller
        $validator = $this->validator($request->all());
        
        if ($validator->fails()) {
-           return $this->failResponse('Error while add review, please try again or contact adminstrator.');
+        return $request->all();
+        //    return $this->failResponse('Error while add review, please try again or contact adminstrator.', $request->all());
        }
        
        $review = $this->create($request->all(), $request->user());

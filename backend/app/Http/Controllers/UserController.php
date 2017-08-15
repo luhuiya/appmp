@@ -7,6 +7,7 @@ use onestopcore\Http\Requests;
 use onestopcore\Http\Controllers\Controller;
 use Validator;
 use onestopcore\User;
+use onestopcore\Balance;
 use Hash;
 
 class UserController extends Controller
@@ -30,8 +31,19 @@ class UserController extends Controller
    }
    public function getUserDetails(Request $request) {
        $user = $request->user();
-
-       return $user;
+       $max = Balance::max('id') + 1;
+       $balance = Balance::where(['user_id' => $user->id])->firstOrFail();
+       if($balance == null) {
+           $balance = Balance::create([
+            'id' => $max,
+            'user_id' => $user->id,
+            'balance' => 0,
+            'last_balance' => 0,
+            'last_usage' => date("Y-m-d")
+            ]);
+       }
+       
+       return $this->successResponse('OK.', ['user'=>$user, 'balance'=>$balance->balance]);
    }
    public function changeProfile(Request $request) {                
        $user = User::find($request->user()['id']);
