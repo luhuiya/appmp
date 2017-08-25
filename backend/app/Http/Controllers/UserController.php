@@ -32,7 +32,7 @@ class UserController extends Controller
    public function getUserDetails(Request $request) {
        $user = $request->user();
        $max = Balance::max('id') + 1;
-       $balance = Balance::where(['user_id' => $user->id])->firstOrFail();
+       $balance = Balance::where(['user_id' => $user->id])->first();
        if($balance == null) {
            $balance = Balance::create([
             'id' => $max,
