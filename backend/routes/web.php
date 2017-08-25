@@ -71,6 +71,10 @@ Route::group(['middleware' => 'cors', 'prefix' => 'api'], function () {
     /* Review */
     // Route::get('reviews', 'ReviewController@index');
     Route::get('reviews/{id}', 'ReviewController@find');
+    
+    /* Balance */
+    Route::get('balances', 'Api\ApiBalanceController@index');
+    // Route::get('reviews/{id}', 'ReviewController@find');
 });
 Route::get('test/api', 'Api\ApiTestController@index');
 
@@ -93,6 +97,9 @@ Route::group(['middleware' => ['cors', 'auth:api'], 'prefix' => 'api'], function
     /* Review */
     Route::post('review/add', 'ReviewController@store');    
     Route::post('review/edit', 'ReviewController@edit');
+
+    /* Balance */  
+    Route::post('balance/edit', 'Api\ApiBalanceController@edit');
 });
 Route::get('donebalance', 'Api\Payment\ApiPaymentController@doneBalanceAction');
 Route::get('product/download', 'Api\ApiProductDownloadController@downloadAction');

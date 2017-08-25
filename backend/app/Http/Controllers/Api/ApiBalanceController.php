@@ -1,14 +1,14 @@
 <?php
 
-namespace onestopcore\Http\Controllers;
+namespace onestopcore\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
 use onestopcore\Http\Controllers\Controller;
 use Validator;
-use onestopcore\Review;
+use onestopcore\Balance;
 use onestopcore\User;
 
-class ReviewController extends Controller
+class ApiBalanceController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -17,9 +17,9 @@ class ReviewController extends Controller
      */
     public function index()
     {
-        $review = Review::with('product','user')->get();
+        $balance = Balance::get();
         
-        return $this->successResponse('OK', $review);
+        return $this->successResponse('OK', $balance);
     }
 
     /**
@@ -29,12 +29,7 @@ class ReviewController extends Controller
      */
     public function create(array $data, $user)
     {
-        return Review::create([
-            'user_id' => $user->id,
-            'product_id' => $data['product_id'],
-            'description' => $data['description'],
-            'rating' => $data['rating'],
-        ]);
+        //
     }
 
     /**
@@ -44,15 +39,8 @@ class ReviewController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-    {                       
-       $validator = $this->validator($request->all());
-       
-       if ($validator->fails()) {
-           return $this->failResponse('Error while add review, please try again or contact adminstrator.', $request->all());
-       }
-       
-       $review = $this->create($request->all(), $request->user());
-       return $this->successResponse('Add review is successful.', $review);
+    {         
+        //
     }
 
     /**
@@ -80,12 +68,12 @@ class ReviewController extends Controller
         if ($validator->fails()) {
             return array(
                 'code' => 201,
-                'message' => 'Error while add review, please try again or contact adminstrator. '
+                'message' => 'Error while edit balance, please try again or contact adminstrator. '
             );
         }
         
-        $review = $this->update($request->all());
-        return $this->successResponse('Edit review is successful.', $review);
+        $balance = $this->update($request->all(), $request->user());
+        return $this->successResponse('Edit balance is successful.', $balance);
     }
 
     /**
@@ -95,13 +83,13 @@ class ReviewController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(array $data)
-    {        
-        $review = Review::find($data['id']);
-        $review->description = $data['description'];
-        $review->rating = $data['rating'];
-        $review->save();
-        return $review;
+    public function update(array $data, $user)
+    {   
+        $balance = Balance::where(['user_id' => $user->id])->firstOrFail();
+        $balance->last_balance = $balance->balance;
+        $balance->balance = $data['balance'] + $balance->last_balance;
+        $balance->save();
+        return $balance;
     }
 
     /**
@@ -115,18 +103,10 @@ class ReviewController extends Controller
         //
     }
 
-    public function find($id)
-    {        
-        $review = Review::with('product','user')->where('product_id', $id)->get();
-        
-        return $this->successResponse('OK', $review);
-    }
-
     protected function validator(array $data) {
         return Validator::make($data, [
-            'product_id' => 'required',
-            'description' => 'required',
-            'rating' => 'required',
+            // 'user_id' => 'required',
+            'balance' => 'required',
         ]);
     }
 }

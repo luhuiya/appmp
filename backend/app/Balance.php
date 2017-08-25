@@ -28,7 +28,7 @@ class Balance extends Model
      * @var array
      */
     protected $hidden = [
-        'id', 'user_id', 'last_balance', 'last_usage'
+        'id', 'last_balance', 'last_usage'
     ];
 
     /**
