@@ -50,4 +50,12 @@ class Product extends Model
     {
         return $this->hasMany('onestopcore\Review');
     }
+
+    /**
+     * Get the preview.
+     */
+     public function previews()
+     {
+         return $this->hasMany('onestopcore\ProductPreview');
+     }
 }

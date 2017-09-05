@@ -15,7 +15,7 @@ class CreateProductPreviewTable extends Migration
     {
         Schema::create('product_preview', function(Blueprint $table)
 		{			
-            $table->integer('id')->primary('product_preview_pkey');
+            $table->increments('id');
             $table->integer('product_id');
             $table->string('link')->nullable();
 			$table->timestamps();

@@ -41,6 +41,6 @@ class ApiSocialLoginController extends Controller {
      */
     protected function sendResponse(User $user) {
         $token = $user->createToken('social')->accessToken;
-        return response()->json(['code' => 200, 'error' => false, 'message' => 'Success login', 'access_token' => $token], 200);
+        return $this->successResponse('Success login.', $token);
     }
 }

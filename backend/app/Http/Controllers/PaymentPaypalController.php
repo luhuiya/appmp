@@ -72,7 +72,7 @@ class PaymentPaypalController extends Controller
     public function create(Request $request)
     {
         $response = array (
-                'code' => '2002',
+                'code' => '202',
                 'message'   => 'Invalid parameter.'
             );
 

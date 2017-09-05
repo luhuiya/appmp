@@ -42,6 +42,7 @@ class ApiHomeController extends Controller
                 $subcategory =  $product->subcategory;
                 $reviews = $product->reviews;
                 $rating = $product->rating;
+                $preview = $product->previews;
                 // foreach($reviews as $review){
                 //     $rating += $review->rating;
                 // }

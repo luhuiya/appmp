@@ -137,10 +137,11 @@ class ApiPaymentController extends Controller
 
         /* get product or voucher details data */
         $detailsData = $transactionData->getDetailsData();
+        // print_r($detailsData);die();
 
         if($detailsData['error']){
             return array (
-                'code' => '200',
+                'code' => '404',
                 'error' => true,
                 'message'   => 'Product Not Found',
             );  
