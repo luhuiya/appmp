@@ -7,6 +7,7 @@ use onestopcore\Http\Controllers\Controller;
 use Validator;
 use onestopcore\Balance;
 use onestopcore\User;
+use Carbon\Carbon;
 
 class ApiBalanceController extends Controller
 {
@@ -88,6 +89,7 @@ class ApiBalanceController extends Controller
         $balance = Balance::where(['user_id' => $user->id])->firstOrFail();
         $balance->last_balance = $balance->balance;
         $balance->balance = $data['balance'] + $balance->last_balance;
+        $balance->last_usage = Carbon::now();
         $balance->save();
         return $balance;
     }
