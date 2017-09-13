@@ -4,7 +4,7 @@ namespace onestopcore;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Chart extends Model
+class ChartDetail extends Model
 {
     /**
      * The attributes that are mass assignable.
@@ -12,14 +12,14 @@ class Chart extends Model
      * @var array
      */
     protected $fillable = [
-        'total_price', 'total_products', 'is_active', 'user_id'
+        'chart_id', 'product_id', 'number_of_items'
     ];
 
     /**
-     * Get the details
+     * Get the product
      */
-    public function details()
+    public function product()
     {
-        return $this->hasMany('onestopcore\ChartDetail');
+        return $this->belongsTo('onestopcore\Product');
     }
 }
