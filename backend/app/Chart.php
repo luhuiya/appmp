@@ -20,6 +20,6 @@ class Chart extends Model
      */
     public function details()
     {
-        return $this->hasMany('onestopcore\ChartDetail');
+        return $this->hasMany('onestopcore\ChartDetail', 'chart_id');
     }
 }

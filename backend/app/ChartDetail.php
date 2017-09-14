@@ -20,6 +20,11 @@ class ChartDetail extends Model
      */
     public function product()
     {
-        return $this->belongsTo('onestopcore\Product');
+        return $this->belongsTo('onestopcore\Product', 'product_id');
+    }
+
+    public function chart()
+    {
+        return $this->belongsTo('onestopcore\Chart');
     }
 }
