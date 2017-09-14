@@ -48,17 +48,28 @@ class ApiChartController extends Controller
             $chart = $this->createUserChart();
         }
 
-        // save the product into chart detail
-        $chartDetail = new ChartDetail([
-            'chart_id' => $chart->id,
-            'product_id' => $product->id,
-            'number_of_items' => $request->input('number_of_items')
-        ]);
+        // get the product on existing chart
+
+        $chartDetail = ChartDetail::where(['chart_id' => $chart->id, 'product_id' => $product->id])->first();
+        if (!$chartDetail)
+        {
+            // save the product into chart detail
+            $chartDetail = new ChartDetail([
+                'chart_id' => $chart->id,
+                'product_id' => $product->id,
+                'number_of_items' => $request->input('number_of_items')
+            ]);
+        }
+        else
+        {
+            $chartDetail->number_of_items = $chartDetail->number_of_items + $request->input('number_of_items');
+        }
+
 
         $chartDetail->save();
 
         // update the chart
-        $chart->total_price = $chart->total_price + ($product->price * $chartDetail->number_of_items);
+        $chart->total_price = $chart->total_price + ($product->price * $request->input('number_of_items'));
         $chart->total_products = $chart->total_products + $chartDetail->number_of_items;
 
         $chart->save();
@@ -83,7 +94,16 @@ class ApiChartController extends Controller
      */
     private function getUserChart()
     {
-        return Chart::with('details.product')->where(['user_id' => Auth::id(), 'is_active' => true])->first();
+        $chart = Chart::with('details.product')
+            ->where(['user_id' => Auth::id(), 'is_active' => true])->first();
+
+        if ($chart)
+        {
+            dd($chart->getTotalPrice());
+            $chart->total_ = $chart->getTotalItems->first()->total;
+        }
+
+        return $chart;
     }
 
     /**
