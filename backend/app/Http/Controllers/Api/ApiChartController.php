@@ -82,6 +82,34 @@ class ApiChartController extends Controller
         return response()->json($chart, 200);
     }
 
+    public function removeItem($productId)
+    {
+        // get the user chart
+        $chart = $this->getUserChart();
+        if (!$chart)
+        {
+            return response()->json([
+                'error' => true,
+                'message'   => 'The chart is empty',
+            ], 400);
+        }
+
+        $chartDetail = ChartDetail::where(['chart_id' => $chart->id, 'product_id' => $productId])
+            ->first();
+
+        if (!$chartDetail)
+        {
+            return response()->json([
+                'error' => true,
+                'message'   => 'The product is not exist in the chart',
+            ], 400);
+        }
+
+        $chartDetail->delete();
+
+        return response()->json($this->getUserChart(), 200);
+    }
+
     /**
      * Private function to get user chart
      * @return Latest chart of user
