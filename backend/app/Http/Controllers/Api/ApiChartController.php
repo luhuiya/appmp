@@ -10,6 +10,7 @@ use onestopcore\Product;
 use onestopcore\Chart;
 use onestopcore\ChartDetail;
 
+
 class ApiChartController extends Controller
 {
     /**
@@ -99,8 +100,7 @@ class ApiChartController extends Controller
 
         if ($chart)
         {
-            dd($chart->getTotalPrice());
-            $chart->total_ = $chart->getTotalItems->first()->total;
+            $chart->totals = $chart->getTotals();
         }
 
         return $chart;
