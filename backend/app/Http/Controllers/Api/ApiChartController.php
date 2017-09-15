@@ -66,14 +66,7 @@ class ApiChartController extends Controller
             $chartDetail->number_of_items = $chartDetail->number_of_items + $request->input('number_of_items');
         }
 
-
         $chartDetail->save();
-
-        // update the chart
-        $chart->total_price = $chart->total_price + ($product->price * $request->input('number_of_items'));
-        $chart->total_products = $chart->total_products + $chartDetail->number_of_items;
-
-        $chart->save();
 
         return response()->json($this->getUserChart(), 200);
     }
@@ -113,8 +106,6 @@ class ApiChartController extends Controller
     private function createUserChart()
     {
         $chart = new Chart([
-            'total_price' => 0,
-            'total_products' => 0,
             'is_active' => true,
             'user_id' => Auth::id()
         ]);

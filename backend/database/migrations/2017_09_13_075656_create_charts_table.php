@@ -15,8 +15,6 @@ class CreateChartsTable extends Migration
     {
         Schema::create('charts', function (Blueprint $table) {
             $table->increments('id');
-            $table->decimal('total_price');
-            $table->integer('total_products');
             $table->boolean('is_active')->default(false);
             $table->integer('user_id');
             $table->timestamps();
