@@ -123,6 +123,48 @@ class ApiChartController extends Controller
         return response()->json($this->getUserChart(), 200);
     }
 
+
+    public function updateItem(Request $request, $productId)
+    {
+        // get the user chart
+        $chart = $this->getUserChart();
+        if (!$chart)
+        {
+            return response()->json([
+                'error' => true,
+                'message'   => 'The chart is empty',
+            ], 400);
+        }
+
+        // run the validation
+        $validator = Validator::make($request->all(), [
+            'number_of_items' => 'required|numeric|min:1',
+        ]);
+
+        if ($validator->fails()) {
+
+            return response()->json([
+                'error' => true,
+                'message'   => 'Invalid parameters ',
+            ], 400);
+        }
+
+        $chartDetail = ChartDetail::where(['chart_id' => $chart->id, 'product_id' => $productId])
+            ->first();
+
+        if (!$chartDetail)
+        {
+            return response()->json([
+                'error' => true,
+                'message'   => 'The product is not exist in the chart',
+            ], 400);
+        }
+
+        $chartDetail->number_of_items = $request->input('number_of_items');
+        $chartDetail->save();
+
+        return response()->json($this->getUserChart(), 200);
+    }
     /**
      * Private function to get user chart
      * @return Latest chart of user

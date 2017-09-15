@@ -108,6 +108,7 @@ Route::group(['middleware' => ['cors', 'auth:api'], 'prefix' => 'api'], function
     Route::post('chart/add', 'Api\ApiChartController@add');
     Route::get('chart/get', 'Api\ApiChartController@getChart');
     Route::delete('chart/remove/{productId}', 'Api\ApiChartController@removeItem');
+    Route::put('chart/update/{productId}', 'Api\ApiChartController@updateItem');
 });
 Route::get('donebalance', 'Api\Payment\ApiPaymentController@doneBalanceAction');
 Route::get('product/download', 'Api\ApiProductDownloadController@downloadAction');
