@@ -82,6 +82,11 @@ class ApiChartController extends Controller
         return response()->json($chart, 200);
     }
 
+    /**
+     * Remove the product from list
+     * @param $productId
+     * @return response: chart detail
+     */
     public function removeItem($productId)
     {
         // get the user chart
@@ -106,6 +111,14 @@ class ApiChartController extends Controller
         }
 
         $chartDetail->delete();
+
+        // if chart detail empty delete the chart
+        if (ChartDetail::where(['chart_id' => $chart->id])
+            ->get()
+            ->isEmpty())
+        {
+            $chart->delete();
+        }
 
         return response()->json($this->getUserChart(), 200);
     }
