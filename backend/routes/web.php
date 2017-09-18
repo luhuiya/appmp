@@ -90,9 +90,13 @@ Route::group(['middleware' => ['cors', 'auth:api'], 'prefix' => 'api'], function
     Route::get('subcategory/getbycatid/{id}', 'Api\ApiSubCategoryController@getByCatId');
 
     Route::resource('paymentmethod', 'Api\ApiPaymentMethodController');
+
+    // for these route were disabled, still need to be refactored
+    /*==
     Route::resource('payment', 'PaymentPaypalController');
     Route::post('payment/create', 'Api\Payment\ApiPaymentController@create');
     Route::post('sumarypayment', 'Api\Payment\ApiPaymentController@createSumaryAction');
+    ==*/
 
     /* Review */
     Route::post('review/add', 'ReviewController@store');    
@@ -102,7 +106,7 @@ Route::group(['middleware' => ['cors', 'auth:api'], 'prefix' => 'api'], function
     Route::post('balance/edit', 'Api\ApiBalanceController@edit');
 
     /* Payment */  
-    Route::post('payment/add', 'Api\Payment\PaymentController@create');
+    Route::post('payment/create', 'Api\ApiTransactionPayment@create');
 
     /* Chart */
     Route::post('chart/add', 'Api\ApiChartController@add');
