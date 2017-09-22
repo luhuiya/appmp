@@ -113,6 +113,14 @@ Route::group(['middleware' => ['cors', 'auth:api'], 'prefix' => 'api'], function
     Route::get('chart/get', 'Api\ApiChartController@getChart');
     Route::delete('chart/remove/{productId}', 'Api\ApiChartController@removeItem');
     Route::put('chart/update/{productId}', 'Api\ApiChartController@updateItem');
+
+
+    /*
+    // For developer only
+    Route::get('paypal', 'PaymentPaypalController@index');
+    Route::post('paypal/create', 'PaymentPaypalController@createPaypalPayment');
+    Route::get('paypal/show/{payment_id}', 'PaymentPaypalController@show');
+    */
 });
 Route::get('donebalance', 'Api\Payment\ApiPaymentController@doneBalanceAction');
 Route::get('product/download', 'Api\ApiProductDownloadController@downloadAction');

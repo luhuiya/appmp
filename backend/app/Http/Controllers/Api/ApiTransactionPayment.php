@@ -11,9 +11,30 @@ use onestopcore\Balance;
 use onestopcore\Transaction;
 use onestopcore\TransactionDetail;
 use Validator;
+use Paypalpayment;
 
 class ApiTransactionPayment extends Controller
 {
+    /**
+     * object to authenticate the call.
+     * @param object $_apiContext
+     */
+    private $_apiContext;
+
+    public function __construct()
+    {
+
+        // ### Api Context
+        // Pass in a `ApiContext` object to authenticate
+        // the call. You can also send a unique request id
+        // (that ensures idempotency). The SDK generates
+        // a request id if you do not pass one explicitly.
+
+        $this->_apiContext = Paypalpayment::ApiContext(config('paypal_payment.Account.ClientId'),
+            config('paypal_payment.Account.ClientSecret'));
+
+    }
+
     /**
      * Create the transaction payment
      * @param Request $request
@@ -47,13 +68,11 @@ class ApiTransactionPayment extends Controller
         }
 
 
-        // payment with paypal is not supported yet
-        if ($paymentCode !== '02')
+        // payment with paypal
+        if ($paymentCode == '01')
         {
-            return response()->json([
-                'error' => true,
-                'message'   => 'Payment with paypal is not supported yet',
-            ], 400);
+            $payment_id = $request->input('payment_id');
+            $transaction = $this->paypallPayment($userId, $chart, $paymentCode, $payment_id);
         }
 
         // do wallet payment
@@ -86,6 +105,50 @@ class ApiTransactionPayment extends Controller
         }
 
         return $chart;
+    }
+
+    /**
+     * The transaction with paypall.
+     * Currently is not supported yet.
+     */
+    private function paypallPayment($userId, $chart, $paymentCode, $payment_id)
+    {
+        $payment = Paypalpayment::getById($payment_id, $this->_apiContext);
+
+        if (!$payment)
+        {
+            return response()->json([
+                'error' => true,
+                'message'   => 'Invalid payment id',
+            ], 400);
+        }
+
+        if ($payment->state !== 'approved')
+        {
+            return response()->json([
+                'error' => true,
+                'message'   => 'Payment is not completed',
+            ], 400);
+        }
+
+        // create the transaction
+        $transaction = $this->createTransaction($userId, $paymentCode, $chart->totals->total_price);
+
+        // create transaction detail
+        $transactionDetail = $this->createTransactionDetail($transaction->id, $chart->details);
+
+        if ($transactionDetail)
+        {
+            // cleaning up the chart
+            $this->cleaningUpTheChart($chart->id);
+
+            return response()->json($this->getUserTransaction($transaction->id), 200);
+        }
+
+        return response()->json([
+            'error' => true,
+            'message'   => 'Payment failed. Something went wrong!',
+        ], 400);
     }
 
     /**
@@ -210,14 +273,6 @@ class ApiTransactionPayment extends Controller
     }
 
     /**
-     * The transaction with paypall.
-     * Currently is not supported yet.
-     */
-    private function paypallPayment()
-    {
-
-    }
-    /**
      * Transaction field rules, used for validation
      * @return array
      */
@@ -226,7 +281,8 @@ class ApiTransactionPayment extends Controller
         return [
             'chart_id' => 'required|numeric',
             'payment_code' => 'required',
-            'voucher_code' => 'string|nullable'
+            'voucher_code' => 'string|nullable',
+            'payment_id' => 'string',
         ];
     }
 }

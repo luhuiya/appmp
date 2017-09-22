@@ -63,9 +63,8 @@ class PaymentPaypalController extends Controller
     {
        $payment = Paypalpayment::getById($payment_id,$this->_apiContext);
 
-       return (array) json_decode($payment);
-
-       dd($payment);
+       // return (array) json_decode($payment);
+       return $payment;
     }
 
 
@@ -149,7 +148,7 @@ class PaymentPaypalController extends Controller
             return $response;
     }
 
-    protected function _createPaypalPayment(){
+    public function createPaypalPayment(){
 
         $payer = Paypalpayment::Payer();
         $payer->setPaymentMethod("paypal");
