@@ -111,9 +111,9 @@ class ApiTransactionPayment extends Controller
      * The transaction with paypall.
      * Currently is not supported yet.
      */
-    private function paypallPayment($userId, $chart, $paymentCode, $payment_id)
+    private function paypallPayment($userId, $chart, $paymentCode, $paymentId)
     {
-        $payment = Paypalpayment::getById($payment_id, $this->_apiContext);
+        $payment = Paypalpayment::getById($paymentId, $this->_apiContext);
 
         if (!$payment)
         {
@@ -132,7 +132,7 @@ class ApiTransactionPayment extends Controller
         }
 
         // create the transaction
-        $transaction = $this->createTransaction($userId, $paymentCode, $chart->totals->total_price);
+        $transaction = $this->createTransaction($userId, $paymentCode, $chart->totals->total_price, $paymentId);
 
         // create transaction detail
         $transactionDetail = $this->createTransactionDetail($transaction->id, $chart->details);
@@ -213,12 +213,13 @@ class ApiTransactionPayment extends Controller
      * @param $voucherCode
      * @return Transaction
      */
-    private function createTransaction($userId, $paymentCode, $totalPayment, $voucherCode = null)
+    private function createTransaction($userId, $paymentCode, $totalPayment, $paymentId = null, $voucherCode = null)
     {
         $transaction = new Transaction([
             'user_id' => $userId,
             'payment_code' => $paymentCode,
             'total_payment' => $totalPayment,
+            'payment_id' => $paymentId,
             'voucher_code' => $voucherCode
         ]);
 
@@ -256,7 +257,8 @@ class ApiTransactionPayment extends Controller
      */
     private function getUserTransaction($transactionId)
     {
-        return Transaction::with('details.product')->first();
+        return Transaction::with('details.product')
+            ->find($transactionId);
     }
 
     /**

@@ -15,6 +15,7 @@ class Transaction extends Model
         'user_id',
         'payment_code',
         'total_payment',
+        'payment_id',
         'voucher_code',
     ];
 
