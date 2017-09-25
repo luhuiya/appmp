@@ -116,9 +116,10 @@ Route::group(['middleware' => ['cors', 'auth:api'], 'prefix' => 'api'], function
 
     /* Transaction history*/
     Route::get('transaction/get/{transactionId}', 'Api\ApiTransactions@getById');
-    /*
+    Route::get('transaction/all', 'Api\ApiTransactions@getAll');
 
-    // For developer only
+
+    /* For developer only
     Route::get('paypal', 'PaymentPaypalController@index');
     Route::post('paypal/create', 'PaymentPaypalController@createPaypalPayment');
     Route::get('paypal/show/{payment_id}', 'PaymentPaypalController@show');
