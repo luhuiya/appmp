@@ -114,8 +114,10 @@ Route::group(['middleware' => ['cors', 'auth:api'], 'prefix' => 'api'], function
     Route::delete('chart/remove/{productId}', 'Api\ApiChartController@removeItem');
     Route::put('chart/update/{productId}', 'Api\ApiChartController@updateItem');
 
-
+    /* Transaction history*/
+    Route::get('transaction/get/{transactionId}', 'Api\ApiTransactions@getById');
     /*
+
     // For developer only
     Route::get('paypal', 'PaymentPaypalController@index');
     Route::post('paypal/create', 'PaymentPaypalController@createPaypalPayment');

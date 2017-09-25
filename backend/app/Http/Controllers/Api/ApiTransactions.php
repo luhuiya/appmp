@@ -13,6 +13,7 @@ class ApiTransactions extends Controller
         $transaction = Transaction::with('details.product')->find($transactionId);
         if ($transaction)
         {
+            $transaction->totals = $transaction->getTotals();
             return response()->json($transaction, 200);
         }
 
