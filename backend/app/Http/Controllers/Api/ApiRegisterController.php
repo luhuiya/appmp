@@ -36,7 +36,7 @@ class ApiRegisterController extends Controller
         $validator = $this->validator($request->all());
 
        if ($validator->fails()) {
-           return response()->json(['message' => $validator->errors()->first()], 412);
+            return $this->failResponse($validator->errors()->first(), $validator->errors());
        }
 
        $registerUser = $this->create($request->all());
